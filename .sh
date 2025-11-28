@@ -11,6 +11,7 @@ alias jlink="$GRAALVM_HOME/bin/jlink"
 alias jpackage="$GRAALVM_HOME/bin/jpackage"
 mkdir -p bin
 TMP=$(mktemp -d)
+trap 'rm -rf "$TMP"' EXIT
 MF=$TMP/manifest.mf
 JAR=$TMP/App.jar
 JARvar=${JAR//[.\/]/_}
