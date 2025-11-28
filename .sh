@@ -39,5 +39,5 @@ int main()
 }
 EOF
 gcc "$C" -o app
-rm -r bin $MF $JAR $H $C
+rm -r bin
 ./app
