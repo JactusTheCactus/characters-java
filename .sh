@@ -10,11 +10,12 @@ GRAALVM_HOME="/opt/graalvm-community-openjdk-25.0.1+8.1"
 alias jlink="$GRAALVM_HOME/bin/jlink"
 alias jpackage="$GRAALVM_HOME/bin/jpackage"
 mkdir -p bin
-MF="$(mktemp)"
-JAR="$(mktemp)"
-JARvar="${JAR//[.\/]/_}"
-H="$(mktemp)"
-C="src/launcher.c"
+TMP=$(mktemp -d)
+MF=$TMP/manifest.mf
+JAR=$TMP/App.jar
+JARvar=${JAR//[.\/]/_}
+H=$TMP/data.h
+C=src/launcher.c
 javac $(find src -name "*.java") -d bin
 echo "Main-Class: app.App" > $MF
 jar cfm $JAR $MF -C bin .
@@ -39,5 +40,5 @@ int main()
 }
 EOF
 gcc "$C" -o app
-rm -r bin
+rm -r bin $TMP
 ./app
