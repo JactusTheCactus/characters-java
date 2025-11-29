@@ -1,45 +1,45 @@
 #!/usr/bin/env bash
 set -euo pipefail
-shopt -s expand_aliases
 flag() {
 	for f in "$@"; do
 		[[ -e ".flags/$f" ]] || return 1
 	done
 }
+DIRS=(
+	dist
+	bin
+	log
+)
 GRAALVM_HOME="/opt/graalvm-community-openjdk-25.0.1+8.1"
-alias jlink="$GRAALVM_HOME/bin/jlink"
-alias jpackage="$GRAALVM_HOME/bin/jpackage"
-mkdir -p bin
-TMP=$(mktemp -d)
-trap 'rm -rf "$TMP"' EXIT
-MF=$TMP/manifest.mf
-JAR=$TMP/App.jar
-JARvar=${JAR//[.\/]/_}
-H=$TMP/data.h
-C=src/launcher.c
-javac $(find src -name "*.java") -d bin
-echo "Main-Class: app.App" > $MF
-jar cfm $JAR $MF -C bin .
-xxd -i $JAR > $H
-cat << EOF > $C
-#include <stdio.h>
-#include <stdlib.h>
-#include "$H"
-int main()
-{
-	FILE *f = fopen("$JAR", "wb");
-	if (!f)
-	{
-		perror("fopen");
-		return 1;
-	}
-	fwrite(${JARvar}, 1, ${JARvar}_len, f);
-	fclose(f);
-	int ret = system("\$GRAALVM_HOME/bin/java -jar $JAR");
-	remove("$JAR");
-	return ret;
+MF="dist/manifest.mf"
+JAR="dist/App.jar"
+JARvar="${JAR//[.\/]/_}"
+JARlen="${JARvar}_len"
+H="dist/data.h"
+C="dist/launcher.c"
+APP="bin/app"
+LOG="log/java.log"
+if flag log; then
+	exec > $LOG 2>&1
+fi
+error() {
+	printf "[X] %s\n" "$1" >&2
+	return 1
 }
-EOF
-gcc "$C" -o app
-rm -r bin $TMP
-./app
+warning() {
+	printf "[!] %s\n" "$1"
+}
+log() {
+	printf "[O] %s\n" "$1"
+}
+compile() {
+	{
+		javac $(find src -name "*.java") -d dist
+	} || error "Java Compilation Failed"
+}
+main() {
+	if compile; then
+		java -cp dist app.App
+	fi
+}
+main
