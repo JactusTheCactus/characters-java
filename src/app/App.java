@@ -67,7 +67,7 @@ public class App {
 		var bottom = new JPanel();
 		for (Character i : chars) {
 			String nameOfficial;
-			var c = i.clone();
+			var c = i.copy();
 			if (c.name.size() == 1) {
 				nameOfficial = c.name.getLast();
 			} else {
