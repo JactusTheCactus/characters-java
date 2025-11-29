@@ -58,14 +58,7 @@ public class App {
 						"Shapeshifts Into A Large, Black Wolf"
 				}));
 
-		Enumeration<Object> keys = UIManager.getDefaults().keys();
-		while (keys.hasMoreElements()) {
-			Object key = keys.nextElement();
-			Object value = UIManager.get(key);
-			if (value instanceof Font) {
-				UIManager.put(key, new Font("SansSerif", Font.PLAIN, 30));
-			}
-		}
+		UIManager.getLookAndFeelDefaults().put("defaultFont", new Font("SansSerif", Font.PLAIN, 30));
 		var win = new JFrame("Characters");
 		win.setSize(1980, 1080);
 		win.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
