@@ -95,12 +95,16 @@ public class App {
 					}
 					{
 						var specLabel = new JLabel("Species:");
-						String specList = "";
+						var specList = new StringBuilder(<html><ul>);
 						for (String i : c.spec) {
-							specList += String.format("<li>%s</li>", i);
+							specList
+								.append("<li>")
+								.append(i)
+								.append("</li>");
 						}
+						specList.append("</ul></html>");
 						body.add(specLabel);
-						var specBody = new JLabel(String.format("<html><ul>%s</ul></html>", specList));
+						var specBody = new JLabel(specList.toString());
 						specBody.setLayout(new BoxLayout(specBody, BoxLayout.Y_AXIS));
 						body.add(specBody);
 					}
