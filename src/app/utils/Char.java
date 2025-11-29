@@ -45,7 +45,7 @@ public class Char {
 			}
 		}
 
-		public Character clone() {
+		public Character copy() {
 			String[] n = name.toArray(new String[0]);
 			String[] p = pron.toArray(new String[0]);
 			String sx;
