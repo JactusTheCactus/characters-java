@@ -123,7 +123,6 @@ public class App {
 			});
 			bottom.add(button);
 		}
-		win.setLayout(new BorderLayout());
 		win.add(main, BorderLayout.WEST);
 		win.add(bottom, BorderLayout.SOUTH);
 		win.setVisible(true);
